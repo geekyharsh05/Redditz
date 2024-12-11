@@ -4,8 +4,14 @@ import redditMobile from "../../public/reddit-full.svg";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import UserDropdown from "./UserDropdown";
 
-function Navbar() {
+async function Navbar() {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
     return (
         <nav className="h-[10vh] w-full flex items-center border-b px-5 lg:px-14 justify-between">
             <Link href={"/"} className="flex items-center gap-x-3">
@@ -22,8 +28,23 @@ function Navbar() {
             </Link>
             <div className="flex items-center gap-x-4">
                 <ThemeToggle />
-                <Button variant="secondary">Sign Up</Button>
-                <Button>Login</Button>
+                {user ? (
+                    <UserDropdown email={user.email} username={`${user.given_name} ${user.family_name}`} userImage={user.picture} />
+                ) : (
+                    <div className="flex items-center gap-x-4">
+                        <Button variant="secondary" asChild>
+                            <RegisterLink>
+                                Sign Up
+                            </RegisterLink>
+                        </Button>
+                        <Button asChild>
+                            <LoginLink>
+                                Login
+                            </LoginLink>
+                        </Button>
+                    </div>
+                )
+                }
             </div>
         </nav>
     )
