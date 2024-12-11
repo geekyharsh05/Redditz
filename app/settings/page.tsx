@@ -30,7 +30,7 @@ async function SettingsPage() {
     const data = await getData(user.id);
 
     return (
-        <div className="max-w-[1000px] mx-auto flex flex-col mt-4">
+        <div className="max-w-[1000px] mx-auto mt-8 px-4 sm:px-6 lg:px-8">
             <SettingsForm username={data?.userName} />
         </div>
     )
