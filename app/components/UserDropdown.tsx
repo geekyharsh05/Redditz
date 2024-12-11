@@ -36,19 +36,19 @@ function UserDropdown({ email, username, userImage }: iProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                        <Link href="/r/create" className="flex items-center">
+                        <Link href="/r/create" className="flex items-center cursor-pointer">
                             <PlusCircle className="mr-2 h-4 w-4" />
                             <span>Create Community</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/create" className="flex items-center">
+                        <Link href="/create" className="flex items-center cursor-pointer">
                             <FileText className="mr-2 h-4 w-4" />
                             <span>Create Post</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/settings" className="flex items-center">
+                        <Link href="/settings" className="flex items-center cursor-pointer">
                             <Settings className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                         </Link>
