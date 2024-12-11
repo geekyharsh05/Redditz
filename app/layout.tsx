@@ -4,6 +4,10 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./providers/theme-provider";
 import { AuthProvider } from "./providers/auth-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,6 +36,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
+          <NextSSRPlugin
+            routerConfig={extractRouterConfig(ourFileRouter)}
+          />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -40,6 +47,7 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
+            <Toaster />
           </ThemeProvider>
         </AuthProvider>
       </body>
