@@ -6,8 +6,31 @@ import Link from "next/link";
 import Banner from "../public/banner.png";
 import HelloImage from "../public/hero-image.png";
 import CreatePostCard from "./components/CreatePostCard";
+import prisma from "@/lib/db";
 
-export default function Home() {
+async function getData() {
+    const data = await prisma.post.findMany({
+      select: {
+        title: true,
+        createdAt: true,
+        textContent: true,
+        id: true,
+        imageString: true,
+        User: {
+          select: {
+            userName: true,
+          }
+        },
+        subName: true,
+      }
+    })
+
+    return data;
+}
+
+export default async function Home() {
+  const data = await getData();
+
   return (
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
       <div className="w-[65%] flex flex-col gap-y-5">
