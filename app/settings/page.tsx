@@ -1,9 +1,8 @@
 import prisma from '@/lib/db'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import React from 'react'
 import { unstable_noStore as noStore } from "next/cache";
-import { redirect } from 'next/navigation';
 import SettingsForm from '../components/SettingsForm';
+import { checkAuth } from '@/utils/checkAuth';
 
 async function getData(userId: string) {
     noStore();
@@ -20,13 +19,7 @@ async function getData(userId: string) {
 }
 
 async function SettingsPage() {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    if (!user) {
-        return redirect("/api/auth/login");
-    }
-
+    const user = await checkAuth();
     const data = await getData(user.id);
 
     return (
