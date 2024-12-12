@@ -23,10 +23,9 @@ async function getData(name: string) {
 
     return data;
 }
-
-export default async function SubredditRoute({ params }: { params: { id: string } }) {
-    const resolvedParams = await params
-    const data = await getData(resolvedParams.id);
+export default async function SubredditRoute({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const data = await getData(id);
     const user = await checkAuth();
 
     return (
@@ -52,7 +51,7 @@ export default async function SubredditRoute({ params }: { params: { id: string 
                             </Link>
                         </div>
                         {user?.id === data?.userId ? (
-                            <SubDescriptionForm description={data?.description} subredditName={data?.name} />
+                            <SubDescriptionForm description={data?.description} subName={data?.name} />
                         ) : (
                             <p className="text-sm font-normal text-secondary-foreground mt-2">
                                 {data?.description}

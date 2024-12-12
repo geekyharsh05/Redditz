@@ -1,6 +1,7 @@
 import Link from "next/link";
 import RedditText from "../../public/logo-name.svg";
 import redditMobile from "../../public/reddit-full.svg";
+import Redditz from "../../public/redditz.svg";
 import Image from "next/image";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ async function Navbar() {
                     className="h-10 w-fit"
                 />
                 <Image
-                    src={RedditText}
+                    src={Redditz}
                     alt="Reddit Text"
                     className="h-9 hidden w-fit lg:block"
                 />
