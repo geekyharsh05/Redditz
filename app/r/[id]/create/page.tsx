@@ -1,7 +1,8 @@
-"use client"
+"use client";
+
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { use, useState } from 'react'
 import pfp from '../../../../public/pfp.png'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
@@ -18,34 +19,35 @@ import { createPost } from '@/app/actions/actions'
 const rules = [
     {
         id: 1,
-        text: "Remember the human",
+        text: "Be respectful and considerate to others.",
     },
     {
         id: 2,
-        text: "Behave like you would in real life",
+        text: "Ensure your content is relevant.",
     },
     {
         id: 3,
-        text: "Look for the original source of content",
+        text: "Provide proper attribution for shared content.",
     },
     {
         id: 4,
-        text: "Search for duplication before posting",
+        text: "Avoid spamming or excessive self-promotion.",
     },
     {
         id: 5,
-        text: "Read the community guidlines",
+        text: "Follow the specific rules of the subreddit.",
     },
 ];
 
 export function CreatePostRoute({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
     const [imageUrl, setImageUrl] = useState<null | string>(null);
     const [json, setJson] = useState<null | JSONContent>(null);
     const [title, setTitle] = useState<null | string>(null);
+    const resolvedParams = use(params)
 
     const createPostReddit = createPost.bind(null, { jsonContent: json });
 
@@ -54,8 +56,8 @@ export function CreatePostRoute({
             <div className="w-[65%] flex flex-col gap-y-5">
                 <h1 className="font-semibold">
                     Subreddit:{" "}
-                    <Link href={`/r/${params.id}`} className="text-primary">
-                        r/{params.id}
+                    <Link href={`/r/${resolvedParams.id}`} className="text-primary">
+                        r/{resolvedParams.id}
                     </Link>
                 </h1>
                 <Tabs defaultValue="post" className="w-full">
@@ -76,7 +78,7 @@ export function CreatePostRoute({
                                     name="imageUrl"
                                     value={imageUrl ?? undefined}
                                 />
-                                <input type="hidden" name="subName" value={params.id} />
+                                <input type="hidden" name="subName" value={resolvedParams.id} />
                                 <CardHeader>
                                     <Label>Title</Label>
                                     <Input
@@ -127,7 +129,7 @@ export function CreatePostRoute({
                 <Card className="flex flex-col p-4">
                     <div className="flex items-center gap-x-2">
                         <Image className="h-10 w-10" src={pfp} alt="pfp" />
-                        <h1 className="font-medium">Posting to Reddit</h1>
+                        <h1 className="font-medium">Posting to Redditz</h1>
                     </div>
                     <Separator className="mt-2" />
 
