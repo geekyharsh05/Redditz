@@ -48,7 +48,7 @@ export function UpVote() {
                     <Loader2 className="h-4 w-4 animate-spin" />
                 </Button>
             ) : (
-                <Button variant="outline" size="sm" type="submit">
+                <Button variant="outline" size="sm" type="submit" className="hover:bg-primary hover:text-primary-foreground">
                     <ArrowUp className="h-4 w-4" />
                 </Button>
             )}
@@ -65,7 +65,7 @@ export function DownVote() {
                     <Loader2 className="h-4 w-4 animate-spin" />
                 </Button>
             ) : (
-                <Button variant="outline" size="sm" type="submit">
+                <Button variant="outline" size="sm" type="submit" className="hover:bg-blue-400">
                     <ArrowDown className="h-4 w-4" />
                 </Button>
             )}
