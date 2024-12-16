@@ -1,15 +1,15 @@
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ArrowDown, ArrowUp, MessageCircle, Clock } from 'lucide-react'
+import { MessageCircle, Clock } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import CopyLink from './CopyLink'
 import { handleVote } from '../actions/actions'
+import { DownVote, UpVote } from './Buttons'
 
 interface PostCardProps {
   title: string
-  jsonContent: string
+  jsonContent: string | null
   id: string
   subName: string | null
   userName: string
@@ -42,9 +42,7 @@ function PostCard({ title, jsonContent, id, subName, userName, imageString, vote
           <form action={handleVote}>
             <input type="hidden" name="voteDirection" value="UP" />
             <input type="hidden" name="postId" value={id} />
-            <Button type='submit' variant="outline" size="sm" className="hover:bg-primary hover:text-primary-foreground">
-              <ArrowUp className="h-5 w-5" />
-            </Button>
+            <UpVote />
           </form>
 
           <span className="font-semibold text-sm">{voteCount}</span>
@@ -52,9 +50,7 @@ function PostCard({ title, jsonContent, id, subName, userName, imageString, vote
           <form action={handleVote}>
             <input type="hidden" name="voteDirection" value="DOWN" />
             <input type="hidden" name="postId" value={id} />
-            <Button type='submit' variant="outline" size="sm" className="hover:bg-primary hover:text-primary-foreground">
-              <ArrowDown className="h-5 w-5" />
-            </Button>
+            <DownVote />
           </form>
         </div>
 
@@ -82,7 +78,7 @@ function PostCard({ title, jsonContent, id, subName, userName, imageString, vote
             <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">{title}</h2>
           </Link>
 
-          {imageString && (
+          {imageString ? (
             <div className="mb-4 rounded-lg overflow-hidden">
               <Image
                 src={imageString}
@@ -91,6 +87,10 @@ function PostCard({ title, jsonContent, id, subName, userName, imageString, vote
                 height={400}
                 className="w-full h-auto object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
               />
+            </div>
+          ) : (
+            <div>
+
             </div>
           )}
 
