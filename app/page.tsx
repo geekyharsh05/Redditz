@@ -30,7 +30,10 @@ async function getData() {
         },
       },
       subName: true,
-    }
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   })
 
   return data;
@@ -54,11 +57,9 @@ export default async function Home() {
             imageString={post.imageString as string}
             createdAt={post.createdAt}
             voteCount={post.Vote.reduce((acc, vote) => {
-              if (vote.voteType === "UP") {
-                return acc + 1;
-              } else if (vote.voteType === "DOWN") {
-                return Math.max(acc - 1, 0);
-              }
+              if (vote.voteType === "UP") return acc + 1;
+              if (vote.voteType === "DOWN") return acc - 1;
+
               return acc;
             }, 0)}
           />
