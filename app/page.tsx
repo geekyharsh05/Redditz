@@ -12,7 +12,6 @@ import { Suspense } from "react";
 import { SuspenseCard } from "./components/SuspenseCard";
 import Pagination from "./components/Pagination";
 
-
 async function getData() {
   const data = await prisma.post.findMany({
     select: {
@@ -24,7 +23,7 @@ async function getData() {
       User: {
         select: {
           userName: true,
-        }
+        },
       },
       Vote: {
         select: {
@@ -38,57 +37,55 @@ async function getData() {
     orderBy: {
       createdAt: "desc",
     },
-  })
+  });
 
   return data;
 }
 
 export default function Home() {
-
   return (
-    <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
-      <div className="w-[65%] flex flex-col gap-y-5">
-        <CreatePostCard />
-        <Suspense fallback={<SuspenseCard />}>
-          <ShowItems />
-        </Suspense>
-      </div>
-
-      <div className="w-[35%]">
+    <div className="max-w-[1000px] mx-auto flex flex-col lg:flex-row gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
+      {/* Right Section */}
+      <div className="lg:w-[35%] w-full mt-6 lg:mt-0 order-first lg:order-2">
         <Card>
-          <Image src={Banner} alt="Banner" />
+          <Image src={Banner} alt="Community Banner" className="w-full object-cover" />
           <div className="p-2">
             <div className="flex items-center">
               <Image
                 src={HelloImage}
-                alt="Hello Image"
+                alt="Welcome Illustration"
                 className="w-10 h-16 -mt-6"
               />
-              <h1 className="font-medium pl-3">Home</h1>
+              <h1 className="font-medium pl-3">Welcome Home</h1>
             </div>
             <p className="text-sm text-muted-foreground pt-2">
-              Your Home Reddit frontpage. Come here to check in with your
-              favorite communites!
+              This is your personalized Reddit front page. Check in with your favorite communities and explore new ones!
             </p>
 
             <Separator className="my-5" />
 
             <div className="flex flex-col gap-y-3">
               <Button asChild variant="secondary">
-                <Link href="/r/harsh/create">Create Post</Link>
+                <Link href="/r/harsh/create">Create a Post</Link>
               </Button>
               <Button asChild>
-                <Link href="/r/create">Create Community</Link>
+                <Link href="/r/create">Start a Community</Link>
               </Button>
             </div>
           </div>
         </Card>
       </div>
+
+      {/* Left Section */}
+      <div className="lg:w-[65%] w-full flex flex-col gap-y-5 lg:order-1">
+        <CreatePostCard />
+        <Suspense fallback={<SuspenseCard />}>
+          <ShowItems />
+        </Suspense>
+      </div>
     </div>
   );
 }
-
-// { searchParams }: { searchParams: { page: string } }
 
 async function ShowItems() {
   const data = await getData();
@@ -117,4 +114,3 @@ async function ShowItems() {
     </>
   );
 }
-
