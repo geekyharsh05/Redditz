@@ -14,7 +14,7 @@ import { TipTapEditor } from '@/app/components/TipTapEditor'
 import { SubmitButton } from '@/app/components/Buttons'
 import { UploadDropzone } from '@/app/components/Uploadthing'
 import { JSONContent } from "@tiptap/react";
-import { createPost } from '@/app/actions/actions'
+import { createPost } from '@/app/actions'
 
 const rules = [
     {

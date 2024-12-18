@@ -1,6 +1,6 @@
 "use client";
 
-import { createCommunity } from '@/app/actions/actions'
+import { createCommunity } from '@/app/actions'
 import { SubmitButton } from '@/app/components/Buttons'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
