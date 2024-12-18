@@ -7,7 +7,7 @@ import pfp from '../../../../public/pfp.png'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Text, Video } from 'lucide-react'
+import { ImageDown, Text } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { TipTapEditor } from '@/app/components/TipTapEditor'
@@ -39,7 +39,7 @@ const rules = [
     },
 ];
 
-export function CreatePostRoute({
+export default function CreatePostRoute({
     params,
 }: {
     params: Promise<{ id: string }>;
@@ -47,13 +47,14 @@ export function CreatePostRoute({
     const [imageUrl, setImageUrl] = useState<null | string>(null);
     const [json, setJson] = useState<null | JSONContent>(null);
     const [title, setTitle] = useState<null | string>(null);
-    const resolvedParams = use(params)
+    const resolvedParams = use(params);
 
     const createPostReddit = createPost.bind(null, { jsonContent: json });
 
     return (
-        <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4">
-            <div className="w-[65%] flex flex-col gap-y-5">
+        <div className="max-w-[1000px] mx-auto flex flex-col lg:flex-row gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
+            {/* Left Section (Post Form) */}
+            <div className="lg:w-[65%] w-full flex flex-col gap-y-5">
                 <h1 className="font-semibold">
                     Subreddit:{" "}
                     <Link href={`/r/${resolvedParams.id}`} className="text-primary">
@@ -66,7 +67,7 @@ export function CreatePostRoute({
                             <Text className="h-4 w-4 mr-2" /> Post
                         </TabsTrigger>
                         <TabsTrigger value="image">
-                            <Video className="h-4 w-4 mr-2" />
+                            <ImageDown className="h-4 w-4 mr-2" />
                             Image & Video
                         </TabsTrigger>
                     </TabsList>
@@ -88,7 +89,6 @@ export function CreatePostRoute({
                                         value={title ?? ""}
                                         onChange={(e) => setTitle(e.target.value)}
                                     />
-
                                     <TipTapEditor setJson={setJson} json={json} />
                                 </CardHeader>
                                 <CardFooter>
@@ -125,15 +125,18 @@ export function CreatePostRoute({
                     </TabsContent>
                 </Tabs>
             </div>
-            <div className="w-[35%]">
+
+            {/* Right Section (Sidebar) */}
+            <div className="lg:w-[35%] w-full mt-6 lg:mt-0">
                 <Card className="flex flex-col p-4">
                     <div className="flex items-center gap-x-2">
                         <Image className="h-10 w-10" src={pfp} alt="pfp" />
-                        <h1 className="font-medium">Posting to Redditz</h1>
+                        <h1 className="font-extrabold lg:text-xl">Guidelines for Posting</h1>
                     </div>
                     <Separator className="mt-2" />
 
                     <div className="flex flex-col gap-y-5 mt-5">
+                        {/* Assuming `rules` is available */}
                         {rules.map((item) => (
                             <div key={item.id}>
                                 <p className="text-sm font-medium">
@@ -148,5 +151,3 @@ export function CreatePostRoute({
         </div>
     );
 }
-
-export default CreatePostRoute
