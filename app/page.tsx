@@ -12,6 +12,7 @@ import { Suspense } from "react";
 import { SuspenseCard } from "./components/SuspenseCard";
 import Pagination from "./components/Pagination";
 
+
 async function getData() {
   const data = await prisma.post.findMany({
     select: {
@@ -116,3 +117,4 @@ async function ShowItems() {
     </>
   );
 }
+
