@@ -4,8 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import CopyLink from './CopyLink'
-import { handleVote } from '../actions/actions'
+import { handleVote } from '../actions'
 import { DownVote, UpVote } from './Buttons'
+import getTimeAgo from '@/utils/getTimeAgo'
 
 interface PostCardProps {
   title: string
@@ -13,28 +14,12 @@ interface PostCardProps {
   id: string
   subName: string | null
   userName: string
-  imageString: string
+  imageString: string | null
   voteCount: number
   createdAt: Date
 }
 
 function PostCard({ title, jsonContent, id, subName, userName, imageString, voteCount, createdAt }: PostCardProps) {
-  const getTimeAgo = (date: Date) => {
-    const now = new Date()
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
-
-    if (diffInHours < 1) {
-      return 'Less than an hour ago'
-    } else if (diffInHours === 1) {
-      return '1 hour ago'
-    } else if (diffInHours < 24) {
-      return `${diffInHours} hours ago`
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24)
-      return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`
-    }
-  }
-
   return (
     <Card className="overflow-hidden">
       <div className="flex">

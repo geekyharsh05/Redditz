@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { SaveButton } from "./Buttons"
 import { useActionState, useEffect } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { updateSubRedditDescription } from "../actions/actions"
+import { updateSubRedditDescription } from "../actions"
 
 interface iProps {
     subName: string

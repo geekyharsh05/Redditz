@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { SubmitButton } from "./Buttons";
-import { updateUsername } from "../actions/actions";
+import { updateUsername } from "../actions";
 import { useToast } from "@/hooks/use-toast";
 
 const initialState = {
@@ -64,7 +64,7 @@ export default function SettingsForm({
             )}
 
             <div className="w-full flex mt-5 gap-x-5 justify-end">
-                <Link href='/' className={buttonVariants({ variant: "secondary"})}>Cancel</Link>
+                <Link href='/' className={buttonVariants({ variant: "secondary" })}>Cancel</Link>
                 <SubmitButton text="Change Username" />
             </div>
         </form>
