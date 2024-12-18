@@ -38,7 +38,11 @@ export function SaveButton() {
     );
 }
 
-export function UpVote() {
+interface VoteButtonProps {
+    className?: string;
+}
+
+export function UpVote({ className }: VoteButtonProps) {
     const { pending } = useFormStatus();
 
     return (
@@ -48,14 +52,20 @@ export function UpVote() {
                     <Loader2 className="h-4 w-4 animate-spin" />
                 </Button>
             ) : (
-                <Button variant="outline" size="sm" type="submit" className="hover:bg-primary hover:text-primary-foreground">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    type="submit"
+                    className={className}
+                >
                     <ArrowUp className="h-4 w-4" />
                 </Button>
             )}
         </>
     );
 }
-export function DownVote() {
+
+export function DownVote({ className }: VoteButtonProps) {
     const { pending } = useFormStatus();
 
     return (
@@ -65,7 +75,12 @@ export function DownVote() {
                     <Loader2 className="h-4 w-4 animate-spin" />
                 </Button>
             ) : (
-                <Button variant="outline" size="sm" type="submit" className="hover:bg-blue-400">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    type="submit"
+                    className={className}
+                >
                     <ArrowDown className="h-4 w-4" />
                 </Button>
             )}
