@@ -8,6 +8,9 @@ import HelloImage from "../public/hero-image.png";
 import CreatePostCard from "./components/CreatePostCard";
 import prisma from "@/lib/db";
 import PostCard from "./components/PostCard";
+import { Suspense } from "react";
+import { SuspenseCard } from "./components/SuspenseCard";
+import Pagination from "./components/Pagination";
 
 async function getData() {
   const data = await prisma.post.findMany({
@@ -39,31 +42,15 @@ async function getData() {
   return data;
 }
 
-export default async function Home() {
-  const data = await getData();
+export default function Home() {
 
   return (
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
       <div className="w-[65%] flex flex-col gap-y-5">
         <CreatePostCard />
-        {data.map((post) => (
-          <PostCard
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            jsonContent={post.textContent as string}
-            subName={post.subName}
-            userName={post.User?.userName as string}
-            imageString={post.imageString as string}
-            createdAt={post.createdAt}
-            voteCount={post.Vote.reduce((acc, vote) => {
-              if (vote.voteType === "UP") return acc + 1;
-              if (vote.voteType === "DOWN") return acc - 1;
-
-              return acc;
-            }, 0)}
-          />
-        ))}
+        <Suspense fallback={<SuspenseCard />}>
+          <ShowItems />
+        </Suspense>
       </div>
 
       <div className="w-[35%]">
@@ -97,5 +84,35 @@ export default async function Home() {
         </Card>
       </div>
     </div>
+  );
+}
+
+// { searchParams }: { searchParams: { page: string } }
+
+async function ShowItems() {
+  const data = await getData();
+  return (
+    <>
+      {data.map((post) => (
+        <PostCard
+          key={post.id}
+          id={post.id}
+          title={post.title}
+          jsonContent={post.textContent as string}
+          subName={post.subName}
+          userName={post.User?.userName as string}
+          imageString={post.imageString as string}
+          createdAt={post.createdAt}
+          voteCount={post.Vote.reduce((acc, vote) => {
+            if (vote.voteType === "UP") return acc + 1;
+            if (vote.voteType === "DOWN") return acc - 1;
+
+            return acc;
+          }, 0)}
+        />
+      ))}
+
+      <Pagination totalPages={5} />
+    </>
   );
 }
