@@ -12,37 +12,48 @@ import { Suspense } from "react";
 import { SuspenseCard } from "./components/SuspenseCard";
 import Pagination from "./components/Pagination";
 
-async function getData() {
-  const data = await prisma.post.findMany({
-    select: {
-      title: true,
-      createdAt: true,
-      textContent: true,
-      id: true,
-      imageString: true,
-      User: {
-        select: {
-          userName: true,
-        },
-      },
-      Vote: {
-        select: {
-          userId: true,
-          voteType: true,
-          postId: true,
-        },
-      },
-      subName: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+async function getData(searchParams: string) {
+  const [count, data] = await prisma.$transaction([
+    prisma.post.count(),
 
-  return data;
+    prisma.post.findMany({
+      take: 10,
+      skip: searchParams ? (Number(searchParams) - 1) * 2 : 0,
+      select: {
+        title: true,
+        createdAt: true,
+        textContent: true,
+        id: true,
+        imageString: true,
+        subName: true,
+        User: {
+          select: {
+            userName: true,
+          },
+        },
+        Vote: {
+          select: {
+            userId: true,
+            voteType: true,
+            postId: true,
+          },
+        },
+        Comment: {
+          select: {
+            id: true,
+          }
+        }
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+  ]);
+
+  return { data, count };
 }
 
-export default function Home() {
+export default function Home({ searchParams }: { searchParams: { page: string } }) {
   return (
     <div className="max-w-[1000px] mx-auto flex flex-col lg:flex-row gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
       {/* Right Section */}
@@ -79,16 +90,16 @@ export default function Home() {
       {/* Left Section */}
       <div className="lg:w-[65%] w-full flex flex-col gap-y-5 lg:order-1">
         <CreatePostCard />
-        <Suspense fallback={<SuspenseCard />}>
-          <ShowItems />
+        <Suspense fallback={<SuspenseCard />} key={searchParams.page}>
+          <ShowItems searchParams={searchParams} />
         </Suspense>
       </div>
     </div>
   );
 }
 
-async function ShowItems() {
-  const data = await getData();
+async function ShowItems({ searchParams }: { searchParams: { page: string } }) {
+  const { count, data } = await getData(searchParams.page);
   return (
     <>
       {data.map((post) => (
@@ -97,7 +108,8 @@ async function ShowItems() {
           id={post.id}
           title={post.title}
           jsonContent={post.textContent as string}
-          subName={post.subName}
+          subName={post.subName as string}
+          commentCount={post.Comment.length}
           userName={post.User?.userName as string}
           imageString={post.imageString as string}
           createdAt={post.createdAt}
@@ -110,7 +122,7 @@ async function ShowItems() {
         />
       ))}
 
-      <Pagination totalPages={5} />
+      <Pagination totalPages={Math.ceil(count / 10)} />
     </>
   );
 }
