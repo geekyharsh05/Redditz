@@ -20,7 +20,7 @@ async function getData(searchParams: string) {
 
     prisma.post.findMany({
       take: 10,
-      skip: searchParams ? (Number(searchParams) - 1) * 2 : 0,
+      skip: searchParams ? (Number(searchParams) - 1) * 10 : 0,
       select: {
         title: true,
         createdAt: true,
