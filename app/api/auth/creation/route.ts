@@ -34,5 +34,5 @@ export async function GET() {
         })
     }
 
-    return NextResponse.redirect(process.env.NODE_ENV === "production" ? "" : "http://localhost:3000/")
+    return NextResponse.redirect(process.env.NODE_ENV === "production" ? "https://redditz.theharsh.xyz" : "http://localhost:3000/")
 }
