@@ -8,11 +8,13 @@ import HelloImage from "../public/hero-image.png";
 import CreatePostCard from "./components/CreatePostCard";
 import prisma from "@/lib/db";
 import PostCard from "./components/PostCard";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 import { SuspenseCard } from "./components/SuspenseCard";
 import Pagination from "./components/Pagination";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function getData(searchParams: string) {
+  noStore();
   const [count, data] = await prisma.$transaction([
     prisma.post.count(),
 
@@ -53,7 +55,8 @@ async function getData(searchParams: string) {
   return { data, count };
 }
 
-export default function Home({ searchParams }: { searchParams: { page: string } }) {
+export default function Home({ searchParams }: { searchParams: Promise<{ page: string }> }) {
+  const { page } = use(searchParams)
   return (
     <div className="max-w-[1000px] mx-auto flex flex-col lg:flex-row gap-x-10 mt-4 mb-10 px-4 sm:px-6 lg:px-8">
       {/* Right Section */}
@@ -90,7 +93,7 @@ export default function Home({ searchParams }: { searchParams: { page: string } 
       {/* Left Section */}
       <div className="lg:w-[65%] w-full flex flex-col gap-y-5 lg:order-1">
         <CreatePostCard />
-        <Suspense fallback={<SuspenseCard />} key={searchParams.page}>
+        <Suspense fallback={<SuspenseCard />} key={page}>
           <ShowItems searchParams={searchParams} />
         </Suspense>
       </div>
@@ -98,8 +101,10 @@ export default function Home({ searchParams }: { searchParams: { page: string } 
   );
 }
 
-async function ShowItems({ searchParams }: { searchParams: { page: string } }) {
-  const { count, data } = await getData(searchParams.page);
+async function ShowItems({ searchParams }: { searchParams: Promise<{ page: string }> }) {
+  const { page } = await searchParams
+  const { count, data } = await getData(page);
+
   return (
     <>
       {data.map((post) => (

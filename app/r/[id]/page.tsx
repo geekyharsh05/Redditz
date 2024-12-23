@@ -7,11 +7,13 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import prisma from "@/lib/db";
 import { checkAuth } from "@/utils/checkAuth";
-import { CakeIcon } from "lucide-react";
+import { CakeIcon, FileQuestion } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function getData(name: string, searchParams: string) {
+    noStore();
     const [count, data] = await prisma.$transaction([
         prisma.post.count({
             where: {
@@ -48,6 +50,11 @@ async function getData(name: string, searchParams: string) {
                                 voteType: true,
                             },
                         },
+                        Comment: {
+                            select: {
+                                id: true,
+                            }
+                        },
                         subName: true,
                     },
                     orderBy: {
@@ -61,9 +68,10 @@ async function getData(name: string, searchParams: string) {
     return { data, count };
 }
 
-export default async function SubredditRoute({ params, searchParams }: { params: Promise<{ id: string }>, searchParams: { page: string } }) {
+export default async function SubredditRoute({ params, searchParams }: { params: Promise<{ id: string }>, searchParams: Promise<{ page: string }> }) {
     const { id } = await params;
-    const { data, count } = await getData(id, searchParams.page);
+    const { page } = await searchParams
+    const { data, count } = await getData(id, page);
     const user = await checkAuth();
 
     return (
@@ -72,25 +80,37 @@ export default async function SubredditRoute({ params, searchParams }: { params:
             <div className="w-full sm:w-[65%] flex flex-col gap-y-5">
                 <CreatePostCard />
 
-                {data?.posts.map((post) => (
-                    <PostCard
-                        key={post.id}
-                        id={post.id}
-                        imageString={post.imageString as string}
-                        title={post.title}
-                        subName={post.subName as string}
-                        userName={post.User?.userName as string}
-                        jsonContent={post.textContent as string}
-                        voteCount={post.Vote.reduce((acc, vote) => {
-                            if (vote.voteType === "UP") return acc + 1;
-                            if (vote.voteType === "DOWN") return acc - 1;
+                {data?.posts.length === 0 ? (
+                    <div className="flex min-h-[300px] flex-col justify-center items-center rounded-md border border-dashed p-8 text-center">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+                            <FileQuestion className="h-10 w-10 text-primary" />
+                        </div>
 
-                            return acc;
-                        }, 0)}
-                        createdAt={post.createdAt}
-                        commentCount={12}
-                    />
-                ))}
+                        <h2 className="mt-6 text-xl font-semibold">
+                            No Posts Yet!
+                        </h2>
+                    </div>
+                ) : (
+                    data?.posts.map((post) => (
+                        <PostCard
+                            key={post.id}
+                            id={post.id}
+                            imageString={post.imageString as string}
+                            title={post.title}
+                            subName={post.subName as string}
+                            userName={post.User?.userName as string}
+                            jsonContent={post.textContent as string}
+                            voteCount={post.Vote.reduce((acc, vote) => {
+                                if (vote.voteType === "UP") return acc + 1;
+                                if (vote.voteType === "DOWN") return acc - 1;
+
+                                return acc;
+                            }, 0)}
+                            createdAt={post.createdAt}
+                            commentCount={post.Comment.length}
+                        />
+                    ))
+                )}
 
                 <Pagination totalPages={Math.ceil(count / 10)} />
             </div>
