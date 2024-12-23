@@ -1,3 +1,6 @@
+import CreatePostCard from "@/app/components/CreatePostCard";
+import Pagination from "@/app/components/Pagination";
+import PostCard from "@/app/components/PostCard";
 import SubDescriptionForm from "@/app/components/SubDescriptionForm";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,32 +11,88 @@ import { CakeIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getData(name: string) {
-    const data = await prisma.subreddit.findUnique({
-        where: {
-            name: name,
-        },
-        select: {
-            name: true,
-            description: true,
-            createdAt: true,
-            userId: true,
-        }
-    })
+async function getData(name: string, searchParams: string) {
+    const [count, data] = await prisma.$transaction([
+        prisma.post.count({
+            where: {
+                subName: name,
+            }
+        }),
 
-    return data;
+        prisma.subreddit.findUnique({
+            where: {
+                name: name,
+            },
+            select: {
+                name: true,
+                description: true,
+                createdAt: true,
+                userId: true,
+                posts: {
+                    take: 10,
+                    skip: searchParams ? (Number(searchParams) - 1) * 2 : 0,
+                    select: {
+                        title: true,
+                        createdAt: true,
+                        textContent: true,
+                        id: true,
+                        imageString: true,
+                        User: {
+                            select: {
+                                userName: true,
+                            },
+                        },
+                        Vote: {
+                            select: {
+                                userId: true,
+                                voteType: true,
+                            },
+                        },
+                        subName: true,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                }
+            }
+        })]
+    )
+
+    return { data, count };
 }
 
-export default async function SubredditRoute({ params }: { params: Promise<{ id: string }> }) {
+export default async function SubredditRoute({ params, searchParams }: { params: Promise<{ id: string }>, searchParams: { page: string } }) {
     const { id } = await params;
-    const data = await getData(id);
+    const { data, count } = await getData(id, searchParams.page);
     const user = await checkAuth();
 
     return (
         <div className="max-w-[1000px] mx-auto mt-8 px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-y-10 sm:gap-x-10">
             {/* Left Section */}
             <div className="w-full sm:w-[65%] flex flex-col gap-y-5">
-                <h1 className="text-xl sm:text-2xl font-semibold">Hello from the post section</h1>
+                <CreatePostCard />
+
+                {data?.posts.map((post) => (
+                    <PostCard
+                        key={post.id}
+                        id={post.id}
+                        imageString={post.imageString as string}
+                        title={post.title}
+                        subName={post.subName as string}
+                        userName={post.User?.userName as string}
+                        jsonContent={post.textContent as string}
+                        voteCount={post.Vote.reduce((acc, vote) => {
+                            if (vote.voteType === "UP") return acc + 1;
+                            if (vote.voteType === "DOWN") return acc - 1;
+
+                            return acc;
+                        }, 0)}
+                        createdAt={post.createdAt}
+                        commentCount={12}
+                    />
+                ))}
+
+                <Pagination totalPages={Math.ceil(count / 10)} />
             </div>
 
             {/* Right Section */}
