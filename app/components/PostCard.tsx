@@ -128,7 +128,7 @@ interface PostCardProps {
   imageString?: string
   voteCount: number
   createdAt: Date
-  commentCount: number
+  commentCount: number | null
 }
 
 export default function PostCard({
@@ -213,7 +213,7 @@ export default function PostCard({
                   >
                     <Link href={`/post/${id}`}>
                       <MessageCircle className="h-4 w-4" />
-                      30 {commentCount}
+                      {commentCount}
                     </Link>
                   </Button>
                 </TooltipTrigger>
