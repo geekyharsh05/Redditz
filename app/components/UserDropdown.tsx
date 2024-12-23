@@ -42,7 +42,7 @@ function UserDropdown({ email, username, userImage }: iProps) {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/create" className="flex items-center cursor-pointer">
+                        <Link href="/r/harsh/create" className="flex items-center cursor-pointer">
                             <FileText className="mr-2 h-4 w-4" />
                             <span>Create Post</span>
                         </Link>

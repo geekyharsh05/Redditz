@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import prisma from '@/lib/db'
-import { Cake, Link, MessageCircle } from 'lucide-react';
+import { Cake, MessageCircle } from 'lucide-react';
 import { unstable_noStore as noStore } from 'next/cache';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import React from 'react'
 
@@ -125,6 +126,7 @@ async function PostPage({ params }: { params: Promise<{ id: string }> }) {
                         </div>
 
                         <CommentForm postId={id} />
+
                         <Separator className='my-5' />
 
                         <div className="flex flex-col gap-y-7">
