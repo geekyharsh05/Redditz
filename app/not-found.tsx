@@ -1,22 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { ArrowLeft, Frown } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ArrowLeft, Frown } from "lucide-react";
 
 export default function NotFound() {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-background to-muted/30 flex items-center justify-center p-4">
       <Card
-        className={`w-full max-w-md overflow-hidden transition-all duration-500 ${mounted ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+        className={`w-full max-w-md overflow-hidden transition-all duration-500 ${
+          mounted ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
       >
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 z-0" />
@@ -31,14 +33,17 @@ export default function NotFound() {
                   <Frown className="w-12 h-12 text-muted-foreground absolute -top-1 -right-8" />
                 </div>
 
-                <h2 className="text-xl md:text-2xl font-semibold">Page Not Found</h2>
+                <h2 className="text-xl md:text-2xl font-semibold">
+                  Page Not Found
+                </h2>
               </div>
 
               <div className="w-16 h-1 bg-gradient-to-r from-primary to-primary/50 rounded-full" />
 
               <div className="bg-muted/50 p-4 rounded-lg border border-border/50">
-                <p className="text-sm md:text-base text-muted-foreground">
-                  "In the vast realm of the internet, some pages are like socks in a dryer - they just vanish!"
+                <p className="text-sm md:text-base text-muted-foreground px-4 py-3 italic border-l-2 border-primary">
+                  &ldquo;In the vast realm of the internet, some pages are like
+                  socks in a dryer - they just vanish!&rdquo;
                 </p>
               </div>
 
@@ -53,5 +58,5 @@ export default function NotFound() {
         </div>
       </Card>
     </div>
-  )
+  );
 }
