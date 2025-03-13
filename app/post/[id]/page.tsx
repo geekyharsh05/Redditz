@@ -7,14 +7,14 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import prisma from '@/lib/db'
 import { Cake, MessageCircle } from 'lucide-react';
-import { unstable_noStore as noStore } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 import React from 'react'
 
 async function getData(id: string) {
-    noStore();
+    await connection();
     const data = await prisma.post.findUnique({
         where: {
             id: id,

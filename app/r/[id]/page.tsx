@@ -10,10 +10,10 @@ import { checkAuth } from "@/utils/checkAuth";
 import { CakeIcon, FileQuestion } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { unstable_noStore as noStore } from "next/cache";
+import { connection } from "next/server";
 
 async function getData(name: string, searchParams: string) {
-    noStore();
+    await connection()
     const [count, data] = await prisma.$transaction([
         prisma.post.count({
             where: {

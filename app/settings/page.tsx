@@ -1,11 +1,11 @@
 import prisma from '@/lib/db'
 import React from 'react'
-import { unstable_noStore as noStore } from "next/cache";
 import SettingsForm from '../components/SettingsForm';
 import { checkAuth } from '@/utils/checkAuth';
+import { connection } from 'next/server';
 
 async function getData(userId: string) {
-    noStore();
+    await connection();
     const data = await prisma.user.findUnique({
         where: {
             id: userId,

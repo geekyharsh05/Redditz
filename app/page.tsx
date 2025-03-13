@@ -11,10 +11,10 @@ import PostCard from "./components/PostCard";
 import { Suspense, use } from "react";
 import { SuspenseCard } from "./components/SuspenseCard";
 import Pagination from "./components/Pagination";
-import { unstable_noStore as noStore } from "next/cache";
+import { connection } from "next/server";
 
 async function getData(searchParams: string) {
-  noStore();
+  await connection()
   const [count, data] = await prisma.$transaction([
     prisma.post.count(),
 
